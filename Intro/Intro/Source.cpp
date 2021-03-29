@@ -1,4 +1,5 @@
 #include<iostream>
+#include <cmath>
 using namespace std;
 using std::cin;
 using std::cout;
@@ -7,6 +8,9 @@ using std::endl;
 //#define CONST_CHECK
 //#define assignment_check
 //#define ARITHEMETICAL_OPERATORS
+//#define yes
+
+#define DZ
 
 class Point
 {
@@ -106,6 +110,15 @@ public:
 	{
 		cout << "X = " << x << '\t' << "Y = " << y << endl;
 	}
+#ifdef DZ
+	double Distance(Point Point_N2)
+	{
+		return sqrt
+		(
+			(Point_N2.x - this->x) * (Point_N2.x - this->x) * (Point_N2.y - this->y) * (Point_N2.y - this->y)
+		);
+	}
+#endif // DZ
 };
 
 Point operator+(const Point& left, const Point& right)
@@ -156,6 +169,15 @@ void func(Point obj)
 {
 	cout << obj.get_x() << '\t' << obj.get_y() << endl;
 }
+#ifdef DZ
+double Distance(Point A, Point B)
+{
+	return sqrt
+	(
+		(B.get_x() - A.get_x()) + (B.get_y() - A.get_y())
+	);
+}
+#endif // DZ
 
 // Создавая структуру или класс мы создаем новый тип данных
 		// CLASS - это тип данных
@@ -164,7 +186,7 @@ void func(Point obj)
 void main()
 {
 
-	setlocale(0, " ");
+	setlocale(0, "Rus");
 
 #ifdef intro
 	int a;		// Объявляем перемненную a типа int
@@ -225,7 +247,7 @@ void main()
 	(A * B).Print();
 	(A / B).Print();
 #endif // ARITHEMETICAL_OPERATORS
-
+#ifdef yes
 	Point A(2, 3);
 	Point B(3, 4);
 	(A += B).Print(); //Неявный вызов оператора
@@ -236,4 +258,12 @@ void main()
 	(++A).Print();
 	(A++).Print();
 	cout << A << endl;
+#endif // yes
+
+#ifdef DZ
+	Point A(2, 3);
+	Point B(3, 4);
+	cout << "Расстояние от A до B: " << A.Distance(B) << endl; // Метод
+	cout << "Расстояние между A и B: " << Distance(A, B) << endl; // Функция
+#endif // DZ
 }
