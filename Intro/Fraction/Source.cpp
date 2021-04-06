@@ -1,6 +1,7 @@
-#pragma execution_character_set("utf-8")
 #include<iostream>
 using namespace std;
+
+//KAK SDELAT UTF-8 KODIROVKU?
 
 //#define DEBUG
 
@@ -10,7 +11,7 @@ Fraction operator/(Fraction left, Fraction right);
 
 class Fraction
 {
-	int integer; //Целая часть 1
+	int integer; //Целая часть 
 	int numerator; //Числитель
 	int denominator; //Знаминатель
 private:
