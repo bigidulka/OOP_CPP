@@ -9,7 +9,7 @@ Fraction operator/(Fraction left, Fraction right);
 
 class Fraction
 {
-	int integer; //Целая часть
+	int integer; //Целая часть 1
 	int numerator; //Числитель
 	int denominator; //Знаминатель
 private:
