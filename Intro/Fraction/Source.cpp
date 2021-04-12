@@ -1,13 +1,12 @@
 #include<iostream>
+#include<stdio.h>
 using namespace std;
 
-//KAK SDELAT UTF-8 KODIROVKU?
+class Fraction;
+Fraction operator*(Fraction left, Fraction right);
+Fraction operator/(Fraction left, Fraction right);
 
 //#define DEBUG
-
-class Fraction;
-Fraction operator*(const Fraction left, Fraction right);
-Fraction operator/(Fraction left, Fraction right);
 
 class Fraction
 {
@@ -42,6 +41,30 @@ public:
 		this->denominator = denominator;
 	}
 
+	Fraction(double decimal)
+	{
+		/*this->integer = 0;
+		double buffer = decimal - (int)decimal;
+		for (int i = 0; i < 9; i++)
+		{
+			if (buffer == 0)
+			{
+				this->numerator = decimal;
+				this->denominator = 1;
+			}
+			else
+			{
+				this->numerator = (decimal * 10);
+				this->denominator = 10;
+			}
+		}*/
+		decimal += 1e-15;
+		integer = decimal;
+		decimal -= integer;
+		denominator = 1e+9;
+		numerator = decimal * denominator;
+		reduce();
+	}
 	Fraction()
 	{
 		this->integer = 0;
@@ -51,7 +74,7 @@ public:
 		cout << "DefaultConstructor: " << this << endl;
 #endif // DEBUG
 	}
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->integer = integer;
 		this->numerator = 0;
@@ -218,7 +241,7 @@ public:
 		this->integer++;
 		return *this;
 	}
-	Fraction& operator++(int i)
+	Fraction& operator++(int)
 	{
 		Fraction nThis = *this;
 		this->integer++;
@@ -229,11 +252,20 @@ public:
 		this->integer--;
 		return *this;
 	}
-	Fraction& operator--(int i)
+	Fraction& operator--(int)
 	{
 		Fraction nThis = *this;
 		this->integer--;
 		return nThis;
+	}
+
+	explicit operator int()const
+	{
+		return integer;
+	}
+	explicit operator double()const
+	{
+		return integer + (double)numerator / denominator;
 	}
 //	Fraction& operator *= (const Fraction& other)
 //	{
@@ -251,34 +283,6 @@ public:
 		cout << integer << "(" << numerator << "/" << denominator << ")" << endl;
 	}
 };
-
-//int integer; //Целая часть
-//int numerator; //Числитель
-//int denominator; //Знаминатель
-//Fraction operator*(const Fraction& left, const Fraction& right)                  
-//{
-//#ifdef DEBUG
-//	cout << "Global multiply" << endl;
-//#endif // DEBUG
-//	return Fraction
-//	(
-//		left.get_integer() * right.get_integer(),
-//		left.get_numerator() * right.get_numerator(),
-//		left.get_denominator() * right.get_denominator()
-//	);
-//}
-//Fraction operator/(const Fraction& left, const Fraction& right)
-//{
-//#ifdef DEBUG
-//	cout << "Global divide" << endl;
-//#endif // DEBUG
-//	return Fraction
-//	(
-//		left.get_integer() / right.get_integer(),
-//		left.get_numerator() / right.get_numerator(),
-//		left.get_denominator() / right.get_denominator()
-//	);
-//}
 
 Fraction operator+(Fraction left, Fraction right)
 {
@@ -363,13 +367,19 @@ void BringToCommon(Fraction& left, Fraction& right)
 }
 bool operator==(Fraction left, Fraction right)
 {
-	Fraction BringToCommon();
-	return (left.get_numerator() == right.get_numerator());
+	/*Fraction BringToCommon();
+	return (left.get_numerator() == right.get_numerator());*/
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() == right.get_numerator() * left.get_denominator();
 }
-bool operator!=(Fraction left, Fraction right)
+//bool operator!=(Fraction left, Fraction right)
+//{
+//	return !(left.get_numerator() == right.get_numerator());
+//}
+bool operator!=(const Fraction& left, const Fraction& right)
 {
-	Fraction BringToCommon();
-	return !(left.get_numerator() == right.get_numerator());
+	return !(left == right);
 }
 bool operator>=(Fraction left, Fraction right)
 {
@@ -394,6 +404,9 @@ bool operator<(Fraction left, Fraction right)
 
 //#define CONSTRUCTORS_CHECK
 //#define ARITHMETICAL_OPERATORS
+//#define COMPAUND_ASSIGNMENTS
+//#define INCREMENT_CHECK
+//#define COMPARISON_OPERATORS
 
 void main()
 {
@@ -445,8 +458,8 @@ void main()
 		cout << G << " = " << G.to_propper() << endl;
 	}
 #endif // ARITHMETICAL_OPERATORS
-
-	/*double a = 2;
+#ifdef COMPAUND_ASSIGNMENTS
+	double a = 2;
 	double b = 3;
 	a *= 3;
 	Fraction A(11, 4);
@@ -456,8 +469,9 @@ void main()
 	cout << A << endl;
 	A /= B;
 	cout << A << endl;
-	cout << A - A << endl;*/
-
+	cout << A - A << endl;
+#endif // COMPAUND_ASSIGNMENTS
+#ifdef INCREMENT_CHECK
 	Fraction A(10, 5);
 	Fraction B(11, 5);
 	int luck = 0;
@@ -480,4 +494,38 @@ void main()
 	cout << C << endl;
 	C--;
 	cout << C << endl;
+
+	for (double i = .3; i < 10; i++)
+		cout << i << '\t';
+	cout << endl;
+	for (Fraction i(3, 4); i.get_integer() < 10; i++)
+		cout << i << '\t';
+	cout << endl;
+#endif // INCREMENT_CHECK
+#ifdef COMPARISON_OPERATORS
+	Fraction A(1, 2);
+	Fraction B(5, 10);
+	/*if (A == B) cout << "Дроби равны!" << endl;
+	else cout << "Дроби разные!" << endl;*/
+	cout << A << "\t" << B << endl;
+	if (A == B) printf("+\n"); else printf("-\n");
+	if (A != 0) printf("+\n"); else printf("-\n");
+	cout << A << "\t" << B << endl;
+#endif // COMPARISON_OPERATORS
+
+	//Fraction A = (Fraction)5; // из int в fraction - одиночный конструктор
+	Fraction A(5); // explicit конструктор можно вызвать только так, и невозможно вызвать операторм =
+	cout << A << endl;
+	A = Fraction(8); // копия
+	cout << A << endl;
+	Fraction B(3, 4, 5);
+	double b = (double)B;
+	cout << b << endl;
+
+	Fraction C = 2.5;
+	Fraction G = 2.55;
+	Fraction K = 25;
+	cout << C << endl;
+	cout << G << endl;
+	cout << K << endl;
 }
