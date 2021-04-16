@@ -34,44 +34,46 @@ public:
 		return str[index];
 	}
 
-	String(int size = 80)
+	explicit String(int size = 80):size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 #ifdef DEBUG
-		cout << (size == 80 ? "Default" : "Size") << "DefaultConstuctor:\t" << this << endl;
+		cout << (size == 80 ? "Default" : "Size") << "DefaultConstuctor:\t\t" << this << endl;
 #endif // DEBUG
 	}
-	String(const char* str)
+	String(const char* str) :String(strlen(str) + 1)
 	{
-		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
+		//this->size = strlen(str) + 1;
+		//this->str = new char[size] {};
 		strcpy(this->str, str);
 #ifdef DEBUG
-		cout << "Constructor:\t\t" << this << endl;
+		cout << "Constructor:\t\t\t" << this << endl;
 #endif // DEBUG
 	}
-	String(const String& other)
+	String(const String& other):String(other.str)
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
+		//this->size = other.size;
+		//this->str = new char[size] {};
 		strcpy(this->str, other.str);
 #ifdef DEBUG
-		cout << "CopyConstructor:\t" << this << endl;
+		cout << "CopyConstructor:\t\t" << this << endl;
 #endif // DEBUG
 	}
-	String(String&& other)
+	String(String&& other):size(other.size), str(other.str)
 	{
-		this->size = other.size;
-		this->str = other.str;
+		//this->size = other.size;
+		//this->str = other.str;
 		other.str = nullptr;
-		cout << "MoveConstructor:\t" << this << endl;
+#ifdef DEBUG
+		cout << "MoveConstructor:\t\t" << this << endl;
+#endif // DEBUG
 	}
 	~String()
 	{
 		delete[] this->str;
 #ifdef DEBUG
-		cout << "Destructor:\t\t" << this << endl;
+		cout << "Destructor:\t\t\t" << this << endl;
 #endif // DEBUG 
 	}
 
@@ -116,14 +118,14 @@ public:
 
 String operator+(const String& left, const String& right)
 {
-	String result = left.get_size() + right.get_size() - 1;
+	String result(left.get_size() + right.get_size() - 1);
 	for (int i = 0; i < left.get_size(); i++)
 	{
-		result.get_str()[i] = left.get_str()[i];
+		result[i] = left[i];
 	}
 	for (int i = 0; i < right.get_size(); i++)
 	{
-		result.get_str()[i + left.get_size() - 1] = right.get_str()[i];
+		result[i + left.get_size() - 1] = right[i];
 	}
 	return result;
 }
@@ -135,6 +137,7 @@ ostream& operator<<(ostream& os, const String& obj)
 
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGNMENT_CHECK
+#define OPERATOR_PLUS_CHECK
 
 void main()
 {
@@ -153,7 +156,7 @@ void main()
 	String str4;
 	str4 = str3; // CopyAsssignment
 	cout << "Str4:\t" << str4 << endl;
- #endif // CONSTRUCTORS_CHECK
+#endif // CONSTRUCTORS_CHECK
 #ifdef ASSIGNMENT_CHECK
 	String str1 = "Hello";
 	String str2;
@@ -161,11 +164,21 @@ void main()
 	cout << str1 << endl;
 	cout << str2 << endl;
 #endif // ASSIGNMENT_CHECK
-
+#ifdef OPERATOR_PLUS_CHECK
 	String str1 = "Hello";
 	String str2 = "World";
 	String str3;
 	//String str3 = str1 + str2; // Опреатор + будет выполнять конкатенацию строк
 	str1 += str2;
 	cout << str1 << endl;
+#endif // OPERATOR_PLUS_CHECK
+
+	//String str1;		//DefaultConstructor
+	//String str2();		//Объявляется функция str2, которая ничего не принимает, и возвращает значение типа String
+	//String str3{};		//DefaultConstructor
+	//String str4(5);		//SizeConstructor
+	//String str5{ 8 };
+	//String str6("Hello");
+	//String str7	{ "Hello" };
+	//String str8 = 18;	//Неявное преобразование int в String
 }
