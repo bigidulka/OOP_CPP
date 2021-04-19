@@ -137,7 +137,7 @@ ostream& operator<<(ostream& os, const String& obj)
 
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGNMENT_CHECK
-#define OPERATOR_PLUS_CHECK
+//#define OPERATOR_PLUS_CHECK
 
 void main()
 {
@@ -171,8 +171,6 @@ void main()
 	//String str3 = str1 + str2; // Опреатор + будет выполнять конкатенацию строк
 	str1 += str2;
 	cout << str1 << endl;
-#endif // OPERATOR_PLUS_CHECK
-
 	//String str1;		//DefaultConstructor
 	//String str2();		//Объявляется функция str2, которая ничего не принимает, и возвращает значение типа String
 	//String str3{};		//DefaultConstructor
@@ -181,4 +179,5 @@ void main()
 	//String str6("Hello");
 	//String str7	{ "Hello" };
 	//String str8 = 18;	//Неявное преобразование int в String
+#endif // OPERATOR_PLUS_CHECK
 }
