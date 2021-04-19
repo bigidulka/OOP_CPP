@@ -5,6 +5,9 @@ using namespace std;
 
 #define DEBUG
 
+//////////////////////////////////////////////////////////
+//CLASS DECLARATION - ОБЬЯВЛЕНИЕ КЛАССА///////////////////
+
 class String;
 String operator+(const String& left, const String& right);
 
@@ -13,108 +16,132 @@ class String
 	char* str; // Указатель на строку в динамической памяти
 	int size; // Размер строки в Байтах
 public:
-	const char* get_str()const
-	{
-		return str;
-	}
-	char* get_str()
-	{
-		return str;
-	}
-	int get_size()const
-	{
-		return size;
-	}
-	char& operator[](int index)
-	{
-		return str[index];
-	}
-	const char& operator[](int index)const
-	{
-		return str[index];
-	}
+	const char* get_str()const;
+	char* get_str();
+	int get_size()const;
+	char& operator[](int index);
+	const char& operator[](int index)const;
 
-	explicit String(int size = 80):size(size), str(new char[size] {})
-	{
-		//this->size = size;
-		//this->str = new char[size] {};
-#ifdef DEBUG
-		cout << (size == 80 ? "Default" : "Size") << "DefaultConstuctor:\t\t" << this << endl;
-#endif // DEBUG
-	}
-	String(const char* str) :String(strlen(str) + 1)
-	{
-		//this->size = strlen(str) + 1;
-		//this->str = new char[size] {};
-		strcpy(this->str, str);
-#ifdef DEBUG
-		cout << "Constructor:\t\t\t" << this << endl;
-#endif // DEBUG
-	}
-	String(const String& other):String(other.str)
-	{
-		//this->size = other.size;
-		//this->str = new char[size] {};
-		strcpy(this->str, other.str);
-#ifdef DEBUG
-		cout << "CopyConstructor:\t\t" << this << endl;
-#endif // DEBUG
-	}
-	String(String&& other):size(other.size), str(other.str)
-	{
-		//this->size = other.size;
-		//this->str = other.str;
-		other.str = nullptr;
-#ifdef DEBUG
-		cout << "MoveConstructor:\t\t" << this << endl;
-#endif // DEBUG
-	}
-	~String()
-	{
-		delete[] this->str;
-#ifdef DEBUG
-		cout << "Destructor:\t\t\t" << this << endl;
-#endif // DEBUG 
-	}
+	explicit String(int size = 80);
+	String(const char* str);
+	String(const String& other);
+	String(String&& other);
+	~String();
+	
+	String& operator=(const String& other);
+	String& operator=(String&& other);
+	String& operator +=(const String& other);
 
-	String& operator=(const String& other)
-	{
-		// 0) Проверить не является ли другой объект самим собой
-		if (this == &other) return *this;
-		// 1) Сначала удаляем старое значение объекта
-		delete[] this->str;
-		// 2) И только потом присваимваем ему новое значение
-		this->size = other.size;
-		this->str = new char[size] {};
-		strcpy(this->str, other.str);
-#ifdef DEBUG
-		cout << "CopyAssignment:\t\t" << this << endl;
-#endif // DEBUG
-		return *this;
-	}
-	String& operator=(String&& other)
-	{
-		delete[] this->str;
-		this->size = other.size;
-		this->str = other.str;
-		other.str = nullptr;
-#ifdef DEBUG
-		cout << "MoveAssignment:\t\t" << this << endl;
-#endif // DEBUG
-		return *this;
-	}
-	String& operator +=(const String& other)
-	{
-		return *this = *this + other;
-	}
-
-	void Print()const
-	{
-		cout << "Size:\t" << size << endl;
-		cout << "Str:\t" << str << endl;
-		//for (int i = 0; i < size; i++) cout << (int)str[i]; cout << endl;
-	}
+	void Print()const;
 };
+
+//////////////////////////////////////////////////////////
+//CLASS DECLARATION END //////////////////////////////////
+
+//////////////////////////////////////////////////////////
+//CLASS DEFINITION - ОПРЕДЕЛЕНИЕ КЛАССА///////////////////
+
+const char* String::get_str()const
+{
+	return str;
+}
+char* String::get_str()
+{
+	return str;
+}
+int String::get_size()const
+{
+	return size;
+}
+char& String::operator[](int index)
+{
+	return str[index];
+}
+const char& String::operator[](int index)const
+{
+	return str[index];
+}
+
+String::String(int size) :size(size), str(new char[size] {})
+{
+	//this->size = size;
+	//this->str = new char[size] {};
+#ifdef DEBUG
+	cout << (size == 80 ? "Default" : "Size") << "DefaultConstuctor:\t\t" << this << endl;
+#endif // DEBUG
+}
+String::String(const char* str) :String(strlen(str) + 1)
+{
+	//this->size = strlen(str) + 1;
+	//this->str = new char[size] {};
+	strcpy(this->str, str);
+#ifdef DEBUG
+	cout << "Constructor:\t\t\t" << this << endl;
+#endif // DEBUG
+}
+String::String(const String& other) :String(other.str)
+{
+	//this->size = other.size;
+	//this->str = new char[size] {};
+	strcpy(this->str, other.str);
+#ifdef DEBUG
+	cout << "CopyConstructor:\t\t" << this << endl;
+#endif // DEBUG
+}
+String::String(String&& other) :size(other.size), str(other.str)
+{
+	//this->size = other.size;
+	//this->str = other.str;
+	other.str = nullptr;
+#ifdef DEBUG
+	cout << "MoveConstructor:\t\t" << this << endl;
+#endif // DEBUG
+}
+String::~String()
+{
+	delete[] this->str;
+#ifdef DEBUG
+	cout << "Destructor:\t\t\t" << this << endl;
+#endif // DEBUG 
+}
+
+String& String::operator=(const String& other)
+{
+	// 0) Проверить не является ли другой объект самим собой
+	if (this == &other) return *this;
+	// 1) Сначала удаляем старое значение объекта
+	delete[] this->str;
+	// 2) И только потом присваимваем ему новое значение
+	this->size = other.size;
+	this->str = new char[size] {};
+	strcpy(this->str, other.str);
+#ifdef DEBUG
+	cout << "CopyAssignment:\t\t" << this << endl;
+#endif // DEBUG
+	return *this;
+}
+String& String::operator=(String&& other)
+{
+	delete[] this->str;
+	this->size = other.size;
+	this->str = other.str;
+	other.str = nullptr;
+#ifdef DEBUG
+	cout << "MoveAssignment:\t\t" << this << endl;
+#endif // DEBUG
+	return *this;
+}
+String& String::operator +=(const String& other)
+{
+	return *this = *this + other;
+}
+
+void String::Print()const
+{
+	cout << "Size:\t" << size << endl;
+	cout << "Str:\t" << str << endl;
+	//for (int i = 0; i < size; i++) cout << (int)str[i]; cout << endl;
+}
 
 String operator+(const String& left, const String& right)
 {
@@ -134,6 +161,9 @@ ostream& operator<<(ostream& os, const String& obj)
 {
 	return os << obj.get_str();
 }
+
+//////////////////////////////////////////////////////////
+//CLASS DEFINITION END ///////////////////////////////////
 
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGNMENT_CHECK
