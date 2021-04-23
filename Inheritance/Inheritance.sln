@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Inheritance", "Inheritance\Inheritance.vcxproj", "{06A6789F-18C4-49B8-B3E5-81A2341F3C4F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Academy", "Academy\Academy.vcxproj", "{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{06A6789F-18C4-49B8-B3E5-81A2341F3C4F}.Release|x64.Build.0 = Release|x64
 		{06A6789F-18C4-49B8-B3E5-81A2341F3C4F}.Release|x86.ActiveCfg = Release|Win32
 		{06A6789F-18C4-49B8-B3E5-81A2341F3C4F}.Release|x86.Build.0 = Release|Win32
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Debug|x64.ActiveCfg = Debug|x64
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Debug|x64.Build.0 = Debug|x64
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Debug|x86.ActiveCfg = Debug|Win32
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Debug|x86.Build.0 = Debug|Win32
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Release|x64.ActiveCfg = Release|x64
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Release|x64.Build.0 = Release|x64
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Release|x86.ActiveCfg = Release|Win32
+		{523DCABF-AE9C-4F5A-86BB-1C3931D6F24C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
