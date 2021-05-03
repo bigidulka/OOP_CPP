@@ -46,7 +46,7 @@ public:
 		cout << "HConstructor:\t" << this << endl;
 #endif // DEBUG
 	}
-	~Human()
+	virtual ~Human()
 	{
 #ifdef DEBUG
 		cout << "HDestructor:\t" << this << endl;
@@ -54,9 +54,9 @@ public:
 	}
 
 	//Methods
-	void info()const
+	virtual void info()const
 	{
-		cout << "Имя и Фамилия:\t" << last_name << " " << first_name << "\nВозраст:\t" << age << endl;
+		cout << "Имя и Фамилия:\t\t" << last_name << " " << first_name << "\nВозраст:\t\t" << age << endl;
 	}
 };
 class Student :public Human
@@ -120,7 +120,7 @@ public:
 	void info()const
 	{
 		Human::info();
-		cout << "Специальность:\t" << speciality << "\nУспеваемость:\t" << rating << "\nСеместер:\t" << semester << endl;
+		cout << "Специальность:\t\t" << speciality << "\nУспеваемость:\t\t" << rating << "\nСеместер:\t\t" << semester << endl;
 	}
 };
 class Teacher :public Human
@@ -165,7 +165,7 @@ public:
 	void info()const
 	{
 		Human::info();
-		cout << "Специальность:\t" << speciality << "\nОпыт:\t\t" << experience << " лет" << endl;
+		cout << "Специальность:\t\t" << speciality << "\nОпыт:\t\t\t" << experience << " лет" << endl;
 	}
 };
 class Graduate :public Student
@@ -173,6 +173,7 @@ class Graduate :public Student
 	double GPA;
 	unsigned int year_of_issue;
 	bool diplom;
+	string topic;
 public:
 	double get_GPA()const
 	{
@@ -185,6 +186,10 @@ public:
 	bool get_diplom()const
 	{
 		return diplom;
+	}
+	const string& get_topic()const
+	{
+		return topic;
 	}
 	void set_GPA(double GPA)
 	{
@@ -203,13 +208,21 @@ public:
 	{
 		this->diplom = diplom;
 	}
+	void set_topic(const string& topic)
+	{
+		this->topic = topic;
+	}
 
-	Graduate(const string& last_name, const string& first_name, unsigned int age, const string& speciality, double rating, unsigned int semester, double GPA, unsigned int year_of_issue, bool diplom) :
+	Graduate(
+		const string& last_name, const string& first_name, unsigned int age, 
+		const string& speciality, double rating, unsigned int semester, 
+		double GPA, const string& topic, unsigned int year_of_issue, bool diplom) :
 		Student(last_name, first_name, age, speciality, rating, semester)
 	{
 		this->GPA = GPA;
 		this->year_of_issue = year_of_issue;
 		this->diplom = diplom;
+		this->topic = topic;
 #ifdef DEBUG
 		cout << "GConstructor:\t" << this << endl;
 #endif // DEBUG
@@ -224,21 +237,42 @@ public:
 	void info()const
 	{
 		Student::info();
-		cout << "Средний балл аттестата:\t" << GPA << "\nВыпускной:\t" << year_of_issue << endl;
-		if (diplom) cout << "Диплом:\t\t" << "Есть" << endl;
-		else cout << "Диплом:\t\t" << "Нету" << endl;
+		cout << "Средний балл аттестата:\t" << GPA << "\nВыпускной:\t\t" << year_of_issue << "\nТема проекта:\t\t" << topic << endl;
+		if (diplom) cout << "Диплом:\t\t\t" << "Есть" << endl;
+		else cout << "Диплом:\t\t\t" << "Нету" << endl;
 	}
 };
 
 void main()
 {
 	setlocale(0, "Rus");
-	Teacher teacher1("Петров", "Петр", 90, "Сварщик, Электрогазосварщик, Газосварщик", 65);
-	teacher1.info();
-	cout << DEF << endl;
+	/*Teacher teacher1("Петров", "Петр", 90, "Сварщик, Электрогазосварщик, Газосварщик", 65);
 	Student student1("Иванов", "Иван", 21, "Сварщик", 2.3, 3);
-	student1.info();
-	cout << DEF << endl;
-	Graduate graduate1("Степан", "Степанович", 23, "Электрогазосварщик", 4.5, 5, 4.5, 2007, true);
-	graduate1.info();
+	Graduate graduate1("Степан", "Степанов", 23, "Электрогазосварщик", 4.5, 5, 4.5, "Как ухаживать за кактусом", 2007, true);*/
+
+	/*Human* p_student1 = &student1;
+	Human* p_teacher1 = &teacher1;
+	Human* p_graduate1 = &graduate1;
+
+	Human* group[] =
+	{
+		&student1, &teacher1, &graduate1
+	};*/
+	Human* group[] =
+	{
+		new Teacher("Петров", "Петр", 90, "Сварщик, Электрогазосварщик, Газосварщик", 65),
+		new Graduate("Степан", "Степанов", 23, "Электрогазосварщик", 4.5, 5, 4.5, "Как ухаживать за кактусом", 2007, true),
+		new Student("Иванов", "Иван", 21, "Сварщик", 2.3, 3),
+		new Student("Пилипенко", "Евгений", 25, "Програмированние", 4.5, 2),
+		new Student("Montana", "Antonio", 30, "Cocaine Diller", 4.8, 4)
+	};
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		group[i]->info();
+		cout << DEF << endl;
+	}
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
+	}
 }
