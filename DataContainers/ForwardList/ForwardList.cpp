@@ -1,4 +1,5 @@
 #include<iostream>
+#include<exception>
 using namespace std;
 using std::cin;
 using std::cout;
@@ -37,10 +38,68 @@ public:
 		cout << "EDestructor:\t" << this << endl;
 #endif // DEBUG
 	}
+	friend class Iterator;
 	friend class ForwardList;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList right);
 };
 int Element::count = 0; //Инициализация статической переменной
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+#ifdef DEBUG
+		cout << "IConstructor:\t" << this << endl;
+#endif // DEBUG
+	}
+	~Iterator()
+	{
+#ifdef DEBUG
+		cout << "iDestructor:\t" << this << endl;
+#endif // DEBUG
+	}
+
+	//Operators
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
+
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	const Element* operator->()const
+	{
+		return Temp;
+	}
+	Element* operator->()
+	{
+		return Temp;
+	}
+	const int& operator*()const
+	{
+		return Temp->Data;
+	}
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+};
+
 class ForwardList
 {
 	unsigned int size;
@@ -54,6 +113,15 @@ public:
 	{
 		return Head;
 	}
+
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
 	// Constructors
 	ForwardList()
 	{
@@ -64,9 +132,13 @@ public:
 	ForwardList(const initializer_list<int>& il):ForwardList()
 	{
 		cout << typeid(il.begin()).name() << endl;
-		for (const int* it = il.begin(); it != il.end(); it++)
+		/*for (const int* it = il.begin(); it != il.end(); it++)
 		{
 			push_back(*it);
+		}*/
+		for (int i : il)
+		{
+			push_back(i);
 		}
 		cout << "IlConstructor:\t" << this << endl;
 	}
@@ -115,6 +187,18 @@ public:
 		cout << "LMoveAssignment:\t" << this << endl;
 		return *this;
 	}
+
+	int& operator[](int index)
+	{
+		if (index >= size)throw exception("Out of range"); // Бросить исключение
+		Element* Temp = Head;
+		for (int i = 0; i < index; i++)
+		{
+			Temp = Temp->pNext;
+		}
+		return Temp->Data;
+	}
+
 	// Adding elements
 	void push_front(int Data)
 	{
@@ -207,13 +291,15 @@ public:
 			Temp = Temp->pNext; //Переход на  следующий элемент
 		}
 		*/
-		for(Element* Temp = Head; Temp != nullptr; Temp = Temp->pNext)
-			cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
+		//for(Element* Temp = Head; Temp != nullptr; Temp = Temp->pNext/*Temp++*/)
+		//	cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
+		for (Iterator Temp = Head; Temp != nullptr; Temp++)
+			cout << *Temp << '\t';
+		cout << endl;
 		cout << "В списке " << size << " элементов\n";
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
 };
-
 ForwardList operator+(const ForwardList& left, const ForwardList right)
 {
 	ForwardList cat = left; // CopyConstructor
@@ -228,6 +314,7 @@ ForwardList operator+(const ForwardList& left, const ForwardList right)
 #define HARDCORE
 //#define COPY_METHODS_CHECK
 //#define OPERATOR_PLUS_CHECK
+//#define FACTORIAL
 #ifdef BASE_CHECK
 //#define ADDING_ELEMENTS_CHECK
 //#define REMOVING_CHECK
@@ -275,19 +362,40 @@ void main()
 #endif //  ADDING_ELEMENTS_CHECK
 #endif //  BASE_CHECK
 #ifdef HARDCORE
-	/*int arr[] = { 3, 5, 8, 13, 21, 34, 55, 89 };
-	for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
-	{
-		cout << arr[i] << "\t";
-	}*/
-
+	int arr[] = { 3, 5, 8, 13, 21, 34, 55 };
+	cout << sizeof(Element) << endl;
 	ForwardList list = { 3,5,8,13,21 };
-	list.print();
-	//for (int i = 0; i < list.get_size(); i++)
+	//for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
 	//{
-	//	cout << list[i] << "\t";
+	//	cout << arr[i] << "\t";
 	//}
+
+	//range-based for (Диапазонный фор, фор для контейнера, для структуры данных)
+	for (int i : list)
+	{
+		cout << i << '\t';
+	}
+	cout << endl;
+	//list.print();
 #endif // HARDCORE
+#ifdef FACTORIAL
+	//try
+	//{
+	//	for (int i = 0; i < list.get_size(); i++)
+	//	{
+	//		list[i] = rand() % 100;
+	//	}
+	//	for (int i = 0; i < list.get_size(); i++)
+	//	{
+	//		cout << list[i] << "\t";
+	//	}
+	//	cout << endl;
+	//}
+	//catch (const exception& e)
+	//{
+	//	cerr << e.what() << endl; // Метод what возвращает сообщение об ошибке
+	//}
+#endif // FACTORIAL
 #ifdef COPY_METHODS_CHECK
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
