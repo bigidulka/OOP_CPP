@@ -14,91 +14,105 @@ class Element
 	Element* pNext; // Указатель на следущий элемент
 	static int count;
 public:
-
-	const Element* get_pNext()const
-	{
-		return pNext;
-	}
-	int get_data()const
-	{
-		return Data;
-	}
+	const Element* get_pNext()const;
+	int get_data()const;
 	//Constructors
-	Element(int Data, Element* pNext = nullptr):Data(Data), pNext(pNext)
-	{
-		count++;
-#ifdef DEBUG
-		cout << "EConstructor:\t" << this << endl;
-#endif // DEBUG
-	}
-	~Element()
-	{
-		count--;
-#ifdef DEBUG
-		cout << "EDestructor:\t" << this << endl;
-#endif // DEBUG
-	}
+	Element(int Data, Element* pNext = nullptr);
+	~Element();
 	friend class Iterator;
 	friend class ForwardList;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList right);
 };
 int Element::count = 0; //Инициализация статической переменной
+const Element* Element::get_pNext()const
+{
+	return pNext;
+}
+int Element::get_data()const
+{
+	return Data;
+}
+Element::Element(int Data, Element* pNext) :Data(Data), pNext(pNext)
+{
+	count++;
+#ifdef DEBUG
+	cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+}
+Element::~Element()
+{
+	count--;
+#ifdef DEBUG
+	cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+}
 
 class Iterator
 {
 	Element* Temp;
 public:
-	Iterator(Element* Temp = nullptr) :Temp(Temp)
-	{
-#ifdef DEBUG
-		cout << "IConstructor:\t" << this << endl;
-#endif // DEBUG
-	}
-	~Iterator()
-	{
-#ifdef DEBUG
-		cout << "iDestructor:\t" << this << endl;
-#endif // DEBUG
-	}
+	Iterator(Element* Temp = nullptr);
+	~Iterator();
 
 	//Operators
-	Iterator& operator++()
-	{
-		Temp = Temp->pNext;
-		return *this;
-	}
-	Iterator operator++(int)
-	{
-		Iterator old = *this;
-		Temp = Temp->pNext;
-		return old;
-	}
+	Iterator& operator++();
+	Iterator operator++(int);
 
-	bool operator==(const Iterator& other)const
-	{
-		return this->Temp == other.Temp;
-	}
-	bool operator!=(const Iterator& other)const
-	{
-		return this->Temp != other.Temp;
-	}
-	const Element* operator->()const
-	{
-		return Temp;
-	}
-	Element* operator->()
-	{
-		return Temp;
-	}
-	const int& operator*()const
-	{
-		return Temp->Data;
-	}
-	int& operator*()
-	{
-		return Temp->Data;
-	}
+	bool operator==(const Iterator& other)const;
+	bool operator!=(const Iterator& other)const;
+	const Element* operator->()const;
+	Element* operator->();
+	const int& operator*()const;
+	int& operator*();
 };
+
+Iterator::Iterator(Element* Temp) :Temp(Temp)
+{
+#ifdef DEBUG
+	cout << "IConstructor:\t" << this << endl;
+#endif // DEBUG
+}
+Iterator::~Iterator()
+{
+#ifdef DEBUG
+	cout << "iDestructor:\t" << this << endl;
+#endif // DEBUG
+}
+Iterator& Iterator::operator++()
+{
+	Temp = Temp->pNext;
+	return *this;
+}
+Iterator Iterator::operator++(int)
+{
+	Iterator old = *this;
+	Temp = Temp->pNext;
+	return old;
+}
+bool Iterator::operator==(const Iterator& other)const
+{
+	return this->Temp == other.Temp;
+}
+bool Iterator::operator!=(const Iterator& other)const
+{
+	return this->Temp != other.Temp;
+}
+const Element* Iterator::operator->()const
+{
+	return Temp;
+}
+Element* Iterator::operator->()
+{
+	return Temp;
+}
+const int& Iterator::operator*()const
+{
+	return Temp->Data;
+}
+int& Iterator::operator*()
+{
+	return Temp->Data;
+}
 
 class ForwardList
 {
@@ -114,192 +128,211 @@ public:
 		return Head;
 	}
 
-	Iterator begin()
-	{
-		return Head;
-	}
-	Iterator end()
-	{
-		return nullptr;
-	}
+	Iterator begin();
+	Iterator end();
 	// Constructors
-	ForwardList()
-	{
-		this->size = size;
-		this->Head = nullptr; //nullptr в Head означает что список пуст
-		cout << "LConstructor:\t\t" << this << endl;
-	}
-	ForwardList(const initializer_list<int>& il):ForwardList()
-	{
-		cout << typeid(il.begin()).name() << endl;
-		/*for (const int* it = il.begin(); it != il.end(); it++)
-		{
-			push_back(*it);
-		}*/
-		for (int i : il)
-		{
-			push_back(i);
-		}
-		cout << "IlConstructor:\t" << this << endl;
-	}
-	ForwardList(const ForwardList& other):ForwardList()
-	{
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-		{
-			push_back(Temp->Data);
-		}
-		cout << "LCopyConstructor:\t" << this << endl;
-	}
-	ForwardList(ForwardList&& other)
-	{
-		this->size = other.size;
-		this->Head = other.Head;
-		other.Head = nullptr;
-		cout << "LMoveConstructor:\t" << this << endl;
-	}
-	~ForwardList()
-	{
-		//while (Head) pop_front();
-		for (; Head; pop_front());
-		cout << "LDestructor:\t\t" << this << endl;
-	}
+	ForwardList();
+	ForwardList(const initializer_list<int>& il) :ForwardList();
+	ForwardList(const ForwardList& other) :ForwardList();
+	ForwardList(ForwardList&& other);
+	~ForwardList();
 	//operators
-	ForwardList& operator=(const ForwardList& other)
-	{
-		// Проверяем, не является ли список самим собой
-		if (this == &other)return *this;
-		// Очищаем список от старых значений
-		while (Head)pop_front();
-		// Копируем список
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-		{
-			push_back(Temp->Data);
-		}
-		cout << "LCopyAssignment:\t" << this << endl;
-		return *this;
-	}
-	ForwardList& operator=(ForwardList&& other)
-	{
-		while (Head)pop_front();
-		this->size = other.size;
-		this->Head = other.Head;
-		other.Head = nullptr;
-		cout << "LMoveAssignment:\t" << this << endl;
-		return *this;
-	}
-
-	int& operator[](int index)
-	{
-		if (index >= size)throw exception("Out of range"); // Бросить исключение
-		Element* Temp = Head;
-		for (int i = 0; i < index; i++)
-		{
-			Temp = Temp->pNext;
-		}
-		return Temp->Data;
-	}
-
+	ForwardList& operator=(const ForwardList& other);
+	ForwardList& operator=(ForwardList&& other);
+	int& operator[](int index);
 	// Adding elements
-	void push_front(int Data)
-	{
-		//Element* New(new Element(Data));
-		//New->pNext = Head;
-		//Head = New;
-		Head = new Element(Data, Head);
-		size++;
-	}
-	void push_back(int Data)
-	{
-		if (Head == nullptr)
-		{
-			return push_front(Data);
-		}
-		Element* New = new Element(Data);
-		Element* Temp = Head;
-		while (Temp->pNext != nullptr)
-		{
-			Temp = Temp->pNext;
-		}
-		Temp->pNext = New;
-		size++;
-	}
-	void insert(int index, int Data)
-	{
-		if (index > Element::count) return;
-		if (index == 0) return push_front(Data);
-		Element* New = new Element(Data);
-		Element* Temp = Head;
-		for (int i = 0; i < index - 1; i++)
-		{
-			Temp = Temp->pNext;
-		}
-		New->pNext = Temp->pNext;
-		Temp->pNext = New;
-		size++;
-	}
+	void push_front(int Data);
+	void push_back(int Data);
+	void insert(int index, int Data);
 	//Removing element
-	void pop_front()
-	{
-		if (Head == nullptr)return;
-		Element* erase_element = Head; //1) Запоминаем адрес удаляемого элемента
-		Head = Head->pNext; //2) Исключаем элемент из списка
-		delete erase_element;//3) Удаляем элемент из памяти
-		size--;
-	}
-	void pop_back()
-	{
-		if (Head == nullptr)return;
-		if (Head->pNext == nullptr)
-		{
-			return pop_front();
-		}
-		Element* Temp = Head;
-		while (Temp->pNext->pNext != nullptr)
-		{
-			Temp = Temp->pNext;
-		}
-		delete Temp->pNext;
-		Temp->pNext = nullptr;
-		size--;
-	}
-	void erase(int index)
-	{
-		if (index < 0 || index >= size) return;
-		if (index == 0) return pop_front();
-		if (index == size - 1) return pop_back();
-		Element* Temp = Head;
-		for (int i = 0; i < index; i++)
-		{
-			Temp = Temp->pNext;
-		}
-		Element* buffer = Temp->pNext->pNext;
-		delete Temp->pNext;
-		Temp->pNext = buffer;
-		size--;
-	}
-	//Methods
-	void print()const
-	{
-		/*
-		//Для того чтобы ходить по списку нужны
-		//1) Итератор
-		//2) Цикл
-		Element* Temp = Head; //Temp - это итератор, Итератор - указатель при помощи которого можно получить доступ к элементам структуры данных
-		while (Temp != nullptr)
-		{
-			cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
-			Temp = Temp->pNext; //Переход на  следующий элемент
-		}
-		*/
-		//for(Element* Temp = Head; Temp != nullptr; Temp = Temp->pNext/*Temp++*/)
-		//	cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
-		for (Iterator Temp = Head; Temp != nullptr; Temp++)
-			cout << *Temp << '\t';
-		cout << endl;
-		cout << "В списке " << size << " элементов\n";
-		cout << "Общее количество элементов: " << Element::count << endl;
-	}
+	void pop_front();
+	void pop_back();
+	void erase(int index);
+	void print()const;
 };
+Iterator begin()
+{
+	return Head;
+}
+Iterator end()
+{
+	return nullptr;
+}
+// Constructors
+ForwardList()
+{
+	this->size = size;
+	this->Head = nullptr; //nullptr в Head означает что список пуст
+	cout << "LConstructor:\t\t" << this << endl;
+}
+ForwardList(const initializer_list<int>& il) :ForwardList()
+{
+	cout << typeid(il.begin()).name() << endl;
+	/*for (const int* it = il.begin(); it != il.end(); it++)
+	{
+		push_back(*it);
+	}*/
+	for (int i : il)
+	{
+		push_back(i);
+	}
+	cout << "IlConstructor:\t" << this << endl;
+}
+ForwardList(const ForwardList& other) :ForwardList()
+{
+	for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+	{
+		push_back(Temp->Data);
+	}
+	cout << "LCopyConstructor:\t" << this << endl;
+}
+ForwardList(ForwardList&& other)
+{
+	this->size = other.size;
+	this->Head = other.Head;
+	other.Head = nullptr;
+	cout << "LMoveConstructor:\t" << this << endl;
+}
+~ForwardList()
+{
+	//while (Head) pop_front();
+	for (; Head; pop_front());
+	cout << "LDestructor:\t\t" << this << endl;
+}
+//operators
+ForwardList& operator=(const ForwardList& other)
+{
+	// Проверяем, не является ли список самим собой
+	if (this == &other)return *this;
+	// Очищаем список от старых значений
+	while (Head)pop_front();
+	// Копируем список
+	for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+	{
+		push_back(Temp->Data);
+	}
+	cout << "LCopyAssignment:\t" << this << endl;
+	return *this;
+}
+ForwardList& operator=(ForwardList&& other)
+{
+	while (Head)pop_front();
+	this->size = other.size;
+	this->Head = other.Head;
+	other.Head = nullptr;
+	cout << "LMoveAssignment:\t" << this << endl;
+	return *this;
+}
+int& operator[](int index)
+{
+	if (index >= size)throw exception("Out of range"); // Бросить исключение
+	Element* Temp = Head;
+	for (int i = 0; i < index; i++)
+	{
+		Temp = Temp->pNext;
+	}
+	return Temp->Data;
+}
+// Adding elements
+void push_front(int Data)
+{
+	//Element* New(new Element(Data));
+	//New->pNext = Head;
+	//Head = New;
+	Head = new Element(Data, Head);
+	size++;
+}
+void push_back(int Data)
+{
+	if (Head == nullptr)
+	{
+		return push_front(Data);
+	}
+	Element* New = new Element(Data);
+	Element* Temp = Head;
+	while (Temp->pNext != nullptr)
+	{
+		Temp = Temp->pNext;
+	}
+	Temp->pNext = New;
+	size++;
+}
+void insert(int index, int Data)
+{
+	if (index > Element::count) return;
+	if (index == 0) return push_front(Data);
+	Element* New = new Element(Data);
+	Element* Temp = Head;
+	for (int i = 0; i < index - 1; i++)
+	{
+		Temp = Temp->pNext;
+	}
+	New->pNext = Temp->pNext;
+	Temp->pNext = New;
+	size++;
+}
+//Removing element
+void pop_front()
+{
+	if (Head == nullptr)return;
+	Element* erase_element = Head; //1) Запоминаем адрес удаляемого элемента
+	Head = Head->pNext; //2) Исключаем элемент из списка
+	delete erase_element;//3) Удаляем элемент из памяти
+	size--;
+}
+void pop_back()
+{
+	if (Head == nullptr)return;
+	if (Head->pNext == nullptr)
+	{
+		return pop_front();
+	}
+	Element* Temp = Head;
+	while (Temp->pNext->pNext != nullptr)
+	{
+		Temp = Temp->pNext;
+	}
+	delete Temp->pNext;
+	Temp->pNext = nullptr;
+	size--;
+}
+void erase(int index)
+{
+	if (index < 0 || index >= size) return;
+	if (index == 0) return pop_front();
+	if (index == size - 1) return pop_back();
+	Element* Temp = Head;
+	for (int i = 0; i < index; i++)
+	{
+		Temp = Temp->pNext;
+	}
+	Element* buffer = Temp->pNext->pNext;
+	delete Temp->pNext;
+	Temp->pNext = buffer;
+	size--;
+}
+//Methods
+void print()const
+{
+	/*
+	//Для того чтобы ходить по списку нужны
+	//1) Итератор
+	//2) Цикл
+	Element* Temp = Head; //Temp - это итератор, Итератор - указатель при помощи которого можно получить доступ к элементам структуры данных
+	while (Temp != nullptr)
+	{
+		cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
+		Temp = Temp->pNext; //Переход на  следующий элемент
+	}
+	*/
+	//for(Element* Temp = Head; Temp != nullptr; Temp = Temp->pNext/*Temp++*/)
+	//	cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
+	for (Iterator Temp = Head; Temp != nullptr; Temp++)
+		cout << *Temp << '\t';
+	cout << endl;
+	cout << "В списке " << size << " элементов\n";
+	cout << "Общее количество элементов: " << Element::count << endl;
+}
 ForwardList operator+(const ForwardList& left, const ForwardList right)
 {
 	ForwardList cat = left; // CopyConstructor
