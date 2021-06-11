@@ -80,14 +80,13 @@ public:
 			return Temp->Data;
 		}
 	};
-
-	Iterator begin()
-	{
-		return Head;
-	}
 	Iterator end()
 	{
 		return nullptr;
+	}
+	Iterator begin()
+	{
+		return Head;
 	}
 	const Iterator begin()const
 	{
@@ -97,6 +96,76 @@ public:
 	{
 		return nullptr;
 	}
+
+	class ReverseIterator
+	{
+		Element* Temp;
+	public:
+		ReverseIterator(Element* Temp = nullptr) :Temp(Temp)
+		{
+			cout << "RITConstructor:\t" << this << endl;
+		}
+		~ReverseIterator()
+		{
+			cout << "RITDestructor:\t" << this << endl;
+		}
+		// Operators
+		ReverseIterator operator++(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		ReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		ReverseIterator operator--(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return *this;
+		}
+		bool operator==(const ReverseIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const ReverseIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+	ReverseIterator rend()
+	{
+		return Head;
+	}
+	ReverseIterator rbegin()
+	{
+		return Tail;
+	}
+	const ReverseIterator rbegin()const
+	{
+		return Tail;
+	}
+	const ReverseIterator rend()const
+	{
+		return Head;
+	}
+
 	List()
 	{
 		Head = Tail = nullptr;
@@ -398,4 +467,15 @@ void main()
 	}
 	cout << endl;
 #endif // ITERATOR_CHECK
+	List list = { 3,5,8,13,21 };
+	for (int i : list)
+	{
+		cout << i << '\t';
+	}
+	cout << endl;
+	for(List::ReverseIterator it = list.rbegin(); it != list.rend(); it++)
+	{
+		cout << *it << '\t';
+	}
+	cout << endl;
 }
